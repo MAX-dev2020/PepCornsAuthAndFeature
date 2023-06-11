@@ -100,6 +100,7 @@ class EmailPasswordActivity : Activity() {
     private fun reload() {
     }
 
+
     companion object {
         private const val TAG = "EmailPassword"
     }
