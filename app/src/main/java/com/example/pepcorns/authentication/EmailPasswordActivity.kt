@@ -1,11 +1,11 @@
 package com.example.pepcorns.authentication
 
 import android.app.Activity
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.navigation.NavController
-import com.example.pepcorns.MainActivity
 import com.example.pepcorns.components.Destination
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -15,68 +15,46 @@ import com.google.firebase.ktx.Firebase
 class EmailPasswordActivity : Activity() {
 
     // [START declare_auth]
-    private lateinit var auth: FirebaseAuth
+    private var auth: FirebaseAuth = Firebase.auth
+
     // [END declare_auth]
-    private lateinit var navController: NavController
 
-    public override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        // [START initialize_auth]
-        // Initialize Firebase Auth
-        auth = Firebase.auth
-        // [END initialize_auth]
-        navController = (this as MainActivity).navController
-    }
-
-    // [START on_start_check_user]
-    public override fun onStart() {
-        super.onStart()
-        // Check if user is signed in (non-null) and update UI accordingly.
-        val currentUser = auth.currentUser
-        if (currentUser != null) {
-            reload()
-        }
-    }
-    // [END on_start_check_user]
-
-    private fun createAccount(email: String, password: String) {
+    internal fun createAccount(email: String, password: String, context: Context, navController: NavController) {
         // [START create_user_with_email]
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     Log.d(TAG, "createUserWithEmail:success")
                     val user = auth.currentUser
-                    updateUI(user)
+                    updateUI(user, navController)
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "createUserWithEmail:failure", task.exception)
                     Toast.makeText(
-                        baseContext,
+                        context
+                        ,
                         "Authentication failed.",
                         Toast.LENGTH_SHORT,
                     ).show()
-                    updateUI(null)
                 }
             }
     }
 
-    private fun signIn(email: String, password: String) {
-
+    internal fun signIn(email: String, password: String, navController: NavController, context:Context) {
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     Log.d(TAG, "signInWithEmail:success")
                     val user = auth.currentUser
-                    updateUI(user)
+                    updateUI(user, navController)
                 } else {
                     Log.w(TAG, "signInWithEmail:failure", task.exception)
                     Toast.makeText(
-                        baseContext,
+                        context,
                         "Authentication failed.",
                         Toast.LENGTH_SHORT,
                     ).show()
-                    updateUI(null)
+                    updateUI(null, navController)
                 }
             }
     }
@@ -91,15 +69,23 @@ class EmailPasswordActivity : Activity() {
         // [END send_email_verification]
     }
 
-    private fun updateUI(user: FirebaseUser?) {
+    private fun updateUI(user: FirebaseUser?, navController: NavController) {
         navController.navigate(
             Destination.Home.route
-        )
+        ){
+            popUpTo(Destination.Welcome.route){
+                inclusive = true
+            }
+        }
     }
 
-    private fun reload() {
+    private fun reload(navController: NavController) {
+        navController.navigate(Destination.Home.route) {
+            popUpTo(Destination.Welcome.route) {
+                inclusive = true
+            }
+        }
     }
-
 
     companion object {
         private const val TAG = "EmailPassword"

@@ -34,30 +34,20 @@ import com.example.pepcorns.R
 
 @Composable
 fun SignUpBtn(
-    fullNameValue: String,
     emailValue: String,
     passwordValue: String,
-    fullNameError: (Boolean) -> Unit,
     emailError: (Boolean) -> Unit,
     passwordError: (Boolean) -> Unit,
     onRegisterClicked: () -> Unit,
 ){
     Button(
         onClick = {
-            if(fullNameValue.isNotEmpty() && emailValue.isNotEmpty() && passwordValue.isNotEmpty()){
-                if(fullNameValue.contains(Regex("[a-zA-Z]"))){
-                    println("Please enter a valid name")
+            if(emailValue.isNotEmpty() && passwordValue.isNotEmpty()){
+
                     onRegisterClicked()
-                } else {
-                    fullNameError(true)
-                }
             }
             else {
-                if (fullNameValue.isEmpty()) {
-                    fullNameError(true)
-                } else if (fullNameValue.isNotEmpty()) {
-                    fullNameError(false)
-                }
+
                 if ( emailValue.isEmpty()) {
                     emailError(true)
                 } else if (emailValue.isNotEmpty()) {

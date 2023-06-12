@@ -26,18 +26,21 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import com.example.pepcorns.authentication.EmailPasswordActivity
 import com.example.pepcorns.components.ClickableLoginTextComponent
 import com.example.pepcorns.components.SignInBtn
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignInScreen(
-    onLogInClicked: () -> Unit,
-    onSignUpClicked: () -> Unit
+    onSignUpClicked: () -> Unit,
+    navController: NavController
 ) {
     var emailValue by remember { mutableStateOf("") }
     var passwordValue by remember { mutableStateOf("") }
@@ -50,6 +53,8 @@ fun SignInScreen(
 
     val emailIsFocused by emailInteractionSource.collectIsFocusedAsState()
     val passwordIsFocused by passwordInteractionSource.collectIsFocusedAsState()
+
+    val context = LocalContext.current
 
     Column(
         modifier = Modifier
@@ -151,7 +156,14 @@ fun SignInScreen(
             {
                 passwordError = it
             },
-            {onLogInClicked()}
+            {
+                EmailPasswordActivity().signIn(
+                    emailValue,
+                    passwordValue,
+                    navController = navController,
+                    context = context
+                )
+            }
         )
 
         Spacer(modifier = Modifier.weight(1f))

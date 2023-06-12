@@ -26,36 +26,39 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.pepcorns.R
+import com.example.pepcorns.authentication.EmailPasswordActivity
 import com.example.pepcorns.components.ClickableLoginTextComponent
 import com.example.pepcorns.components.SignUpBtn
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignUpScreen(
-    onSignUpClicked: () -> Unit
+    onSignUpClicked: () -> Unit,
+    navController: NavController
 ) {
-    var fullNameValue by remember { mutableStateOf("") }
+
     var emailValue by remember { mutableStateOf("") }
     var passwordValue by remember { mutableStateOf("") }
 
-    var fullNameError by remember { mutableStateOf(false) }
     var emailError by remember { mutableStateOf(false) }
     var passwordError by remember { mutableStateOf(false) }
 
 
-    val fullNameInteractionSource = remember { MutableInteractionSource() }
     val emailInteractionSource = remember { MutableInteractionSource() }
     val passwordInteractionSource = remember { MutableInteractionSource() }
 
-    val fullNameIsFocused by fullNameInteractionSource.collectIsFocusedAsState()
     val emailIsFocused by emailInteractionSource.collectIsFocusedAsState()
     val passwordIsFocused by passwordInteractionSource.collectIsFocusedAsState()
+
+    val context = LocalContext.current
 
     Column(
         modifier = Modifier
@@ -72,35 +75,6 @@ fun SignUpScreen(
             color = MaterialTheme.colorScheme.secondary,
             modifier = Modifier.padding(bottom = 16.dp)
         )
-
-        OutlinedTextField(
-            value = fullNameValue,
-            onValueChange = { fullNameValue = it},
-            label = {
-                Text(
-                    text = "Full Name",
-                    color = MaterialTheme.colorScheme.secondary
-                ) },
-            modifier = Modifier.fillMaxWidth(),
-            colors = TextFieldDefaults.textFieldColors(
-                textColor = MaterialTheme.colorScheme.secondary,
-            ),
-            isError = fullNameError,
-            trailingIcon = {
-                if (fullNameValue.isNotEmpty() && fullNameIsFocused) {
-                    IconButton(onClick = { fullNameValue = "" }) {
-                        Icon(
-                            imageVector = Icons.Filled.Close,
-                            contentDescription = "Remove Password",
-                            tint = MaterialTheme.colorScheme.error
-                        )
-                    }
-                }
-            },
-            interactionSource = fullNameInteractionSource
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
 
         OutlinedTextField(
             value = emailValue,
@@ -167,20 +141,24 @@ fun SignUpScreen(
         Spacer(modifier = Modifier.height(20.dp))
 
         SignUpBtn(
-            fullNameValue,
             emailValue,
             passwordValue,
-            {
-                fullNameError = it
-            },
             {
                 emailError = it
             },
             {
                 passwordError = it
             },
-            {onSignUpClicked()}
+            {
+                EmailPasswordActivity().createAccount(
+                    emailValue,
+                    passwordValue,
+                    context,
+                    navController
+                )
+            }
         )
+
         Spacer(modifier = Modifier.weight(1f))
         ClickableLoginTextComponent(tryingToLogin = true, onTextSelected = {
             onSignUpClicked()
