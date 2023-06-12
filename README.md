@@ -21,4 +21,5 @@ The Real-Time Stock Quotes App is a simple application that displays real-time s
 ## Technologies Used
 
 - Kotlin
-- Compose (Jetpack Compose for Desktop)
+- Jetpack Compose for Desktop
+- Firebase for authentication
