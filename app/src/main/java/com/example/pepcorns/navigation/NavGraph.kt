@@ -50,8 +50,6 @@ fun NavGraph(
         composable(Destination.Home.route){
             HomeScreen( { navController.navigate(Destination.Welcome.route) },
                 viewModel = viewModel)
-
         }
     }
-
 }

@@ -46,6 +46,11 @@ class EmailPasswordActivity : Activity() {
                 if (task.isSuccessful) {
                     Log.d(TAG, "signInWithEmail:success")
                     val user = auth.currentUser
+                    Toast.makeText(
+                        context,
+                        "Authentication successful",
+                        Toast.LENGTH_SHORT,
+                    ).show()
                     updateUI(user, navController)
                 } else {
                     Log.w(TAG, "signInWithEmail:failure", task.exception)
@@ -54,7 +59,6 @@ class EmailPasswordActivity : Activity() {
                         "Authentication failed.",
                         Toast.LENGTH_SHORT,
                     ).show()
-                    updateUI(null, navController)
                 }
             }
     }

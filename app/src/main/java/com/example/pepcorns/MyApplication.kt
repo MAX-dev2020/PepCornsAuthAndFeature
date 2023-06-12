@@ -27,8 +27,9 @@ class MyApplication : Application() {
     }
 
     override fun onCreate() {
+        super.onCreate()
         sharedPreferences = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         saveToken()
-        super.onCreate()
+
     }
 }

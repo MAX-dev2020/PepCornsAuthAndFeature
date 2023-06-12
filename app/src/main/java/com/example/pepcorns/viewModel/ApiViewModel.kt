@@ -15,7 +15,7 @@ class ApiViewModel : ViewModel(){
     val dashboardData: MutableStateFlow<StockData?> = _dashboardData
 
     fun makeApiRequest(apiEndpoint: String) {
-        GetService().getApiInterface("https://api.stockdata.org/v1/data/quote?symbols=", MyApplication.getToken()).getDashboardData(apiEndpoint)
+        GetService().getApiInterface("https://api.stockdata.org", MyApplication.getToken()).getDashboardData(apiEndpoint)
             .enqueue(object : Callback<StockData> {
                 override fun onResponse(
                     call: Call<StockData>,
